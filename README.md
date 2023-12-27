@@ -5,13 +5,44 @@ This benchmarks makes a relatively large number of `HSET` requests to the Redis 
 
 ## Requirements
 * C++20 compiler (tested on `gcc` 12)
-* `boost` (tested v1.83.0, built with SSL support)
+* `boost` (tested v1.83.0, 1.84.0 develop, built with SSL support)
 * `boost::redis` installed to the same directory as `boost`.
+
+### Install development version.
+
+```
+git clone --recurse-submodules -b develop https://github.com/boostorg/boost.git
+cd boost
+./bootstrap.sh
+./b2 --layout=system \
+    --with-system \
+    --with-thread \
+    cxxflags="-std=c++20 -fPIC" \
+    cflags="-fPIC" \
+    variant=release \
+    link=static \
+    -d0 \
+    -j 8 \
+    install
+```
 
 ## Build
 
+### Plain `gcc` command
+
 ```
 g++ -std=c++20 batch_send_benchmark.cpp -o batch_send_benchmark -lboost_system -lssl -lcrypto
+```
+
+Make sure Boost and SSL can be found by GCC.
+
+### CMake build
+
+```
+mkdir build
+cd build
+cmake ..
+cmake --build .
 ```
 
 ## Run
